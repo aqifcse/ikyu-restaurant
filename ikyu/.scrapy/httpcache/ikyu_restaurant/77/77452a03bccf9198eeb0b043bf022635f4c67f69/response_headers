@@ -1,0 +1,12 @@
+Content-Type: text/html; charset=utf-8
+X-From-Restaurant2-Backend: True
+Content-Encoding: gzip
+Accept-Ranges: bytes
+Date: Mon, 15 Feb 2021 05:29:36 GMT
+Via: 1.1 varnish
+Age: 0
+X-Served-By: cache-hkg17921-HKG
+X-Cache: MISS
+X-Cache-Hits: 0
+X-Timer: S1613366975.275203,VS0,VE818
+Vary: Accept-Encoding, X-UA-Device
