@@ -36,30 +36,30 @@ class IkyuRestaurantSpider(scrapy.Spider):
     
     def parse(self, response):
 
-        plans = response.xpath('//div[@id="plans"]/section/div[3]/ul')
+        plans = response.xpath('//div[@id="plans"]/section/div[3]/ul//li[@class="_1QMibK-"]')
+        # print(plans)
 
         for plan in plans:
 
-            meal_type               = plan.xpath('.//li[@class="_1QMibK-"]/div/div/div/div/span/text()').extract_first().replace('\n', '').replace(' ', '')
-            title                   = plan.xpath('.//li[@class="_1QMibK-"]/div/div/div/h3/text()').extract_first().replace('\n', '').replace(' ', '')
-            course_type             = plan.xpath('.//li[@class="_1QMibK-"]/div/div/div/span[1]/text()').extract_first().replace('\n', '').replace(' ', '')
-            regular_fee             = plan.xpath('.//li[@class="_1QMibK-"]/div/div/div/span[2]/text()').extract_first().replace('\n', '').replace(' ', '')
+            meal_type               = plan.xpath('.//div/div/div/div/span/text()').extract_first()
+            title                   = plan.xpath('.//div/div/div/h3/text()').extract_first()
+            course_type             = plan.xpath('.//div/div/div/span[1]/text()').extract_first()
+            regular_fee             = plan.xpath('.//div/div/div/span[2]/text()').extract_first()
 
-            # offer_list = []
-            scrap_output = { 'meal_type' : meal_type, 'title' :  title, 'course_type' : course_type, 'regular_fee' : regular_fee, 'offers' : [] }
+            offer_list = []
+            scrap_output = { 'meal_type' : meal_type + ' ', 'title' :  title + ' ', 'course_type' : course_type + ' ', 'regular_fee' : regular_fee + ' ', 'offers' : [] }
 
-            plan_offers = plan.xpath('.//li[@class="_1QMibK-"]/div/ul')
+            plan_offers = plan.xpath('./div/ul/li[@class="_3S76qhi"]')
 
             for plan_offer in plan_offers:
-                offer_title           = plan_offer.xpath('.//li[@class="_3S76qhi"]/a/div[1]/div[1]/h4/text()').extract_first()
-                offer_current_price   = plan_offer.xpath('.//li[@class="_3S76qhi"]/a/div[1]/div[2]/div[2]/span/span[2]/text()').extract_first()
-                offer_prev_price      = plan_offer.xpath('.//li[@class="_3S76qhi"]/a/div[1]/div[2]/div[1]/span/text()').extract_first()
-                offer_off             = plan_offer.xpath('.//li[@class="_3S76qhi"]/a/div[1]/div[2]/div[2]/span/span[1]/text()').extract_first()
-                offer = "title : " + str(offer_title) + "current_price : " +  str(offer_current_price) + "previous_price : " + str(offer_prev_price) + "off : " + str(offer_off)
+                offer_title           = plan_offer.xpath('.//a/div[1]/div[1]/h4/text()').extract_first()
+                offer_current_price   = plan_offer.xpath('.//a/div[1]/div[2]/div[2]/span/span[2]/text()').extract_first()
+                offer_prev_price      = plan_offer.xpath('.//a/div[1]/div[2]/div[1]/span/text()').extract_first()
+                offer_off             = plan_offer.xpath('.//a/div[1]/div[2]/div[2]/span/span[1]/text()').extract_first()
+                offer = "title : " + str(offer_title) + ' ' + "current_price : " + ' ' +  str(offer_current_price) + ' ' + "previous_price : " + str(offer_prev_price) + ' ' + "off : " + str(offer_off) + ' '
                 scrap_output['offers'].append(offer)
         
-        yield scrap_output
-
+            yield scrap_output
         
 
 
