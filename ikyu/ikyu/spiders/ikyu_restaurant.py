@@ -40,25 +40,56 @@ class IkyuRestaurantSpider(scrapy.Spider):
 
         for plan in plans:
 
-            meal_type               = plan.xpath('.//div/div/div/div/span/text()').extract_first()
-            title                   = plan.xpath('.//div/div/div/h3/text()').extract_first()
-            course_type             = plan.xpath('.//div/div/div/span[1]/text()').extract_first()
-            regular_fee             = plan.xpath('.//div/div/div/span[2]/text()').extract_first()
+            meal_type = plan.xpath('.//div/div/div/div/span/text()').extract_first()
+            if meal_type is not None:
+                meal_type = meal_type.replace('\n', '').replace(' ', '')
+
+            title = plan.xpath('.//div/div/div/h3/text()').extract_first()
+            if title is not None:
+                title = title.replace('\n', '').replace(' ', '') 
+
+            course_type = plan.xpath('.//div/div/div/span[1]/text()').extract_first()
+            if course_type is not None:
+                course_type = course_type.replace('\n', '').replace(' ', '')
+
+            regular_fee = plan.xpath('.//div/div/div/span[2]/text()').extract_first()
+            if regular_fee is not None:
+                regular_fee = regular_fee.replace('\n', '').replace(' ', '')
 
             offer_list = []
-            scrap_output = { 'meal_type' : str(meal_type) + ' ', 'title' :  str(title) + ' ', 'course_type' : str(course_type) + ' ', 'regular_fee' : str(regular_fee) + ' ', 'offers' : offer_list }
+            scrap_output = { 
+                'meal_type' : str(meal_type), 
+                'title' :  str(title), 
+                'course_type' : str(course_type), 
+                'regular_fee' : str(regular_fee), 
+                'offers' : offer_list 
+            }
 
             plan_offers = plan.xpath('./div/ul/li[@class="_3S76qhi"]')
 
             for plan_offer in plan_offers:
-                offer_title               = plan_offer.xpath('.//a/div[1]/div[1]/h4/text()').extract_first()
+                offer_title = plan_offer.xpath('.//a/div[1]/div[1]/h4/text()').extract_first()
+                if offer_title is not None:
+                    offer_title = offer_title.replace('\n', '').replace(' ', '')
+
                 try:
-                    offer_current_price   = plan_offer.xpath('.//a/div[1]/div[2]/div[@class="_2U8wNG5"]/span[@class="_1CPmbeh"]/span[@class="_2Xel14i"]/text()').extract_first()
+                    offer_current_price = plan_offer.xpath('.//a/div[1]/div[2]/div[@class="_2U8wNG5"]/span[@class="_1CPmbeh"]/span[@class="_2Xel14i"]/text()').extract_first()
                 except:
-                    offer_current_price   = plan_offer.xpath('.//a/div[1]/div[2]/div[@class="_2U8wNG5"]/span[@class="_1CPmbeh"]/span[@class="_2Xel14i"]/text()').extract_first()
-                offer_prev_price          = plan_offer.xpath('.//a/div[1]/div[2]/div[1]/span[@class="_1gV6Q0h"]/text()').extract_first()
-                offer_off                 = plan_offer.xpath('.//a/div[1]/div[2]/div[2]/span/span[@class="sAkFuj_"]/text()').extract_first()
-                offer = "title : " + str(offer_title) + ' ' + "current_price : " + ' ' +  str(offer_current_price) + ' ' + "previous_price : " + str(offer_prev_price) + ' ' + "off : " + str(offer_off) + ' '
+                    offer_current_price = plan_offer.xpath('.//a/div[1]/div[2]/div[@class="_2U8wNG5"]/span[@class="_1CPmbeh"]/span[@class="_2Xel14i"]/text()').extract_first()
+
+                offer_prev_price = plan_offer.xpath('.//a/div[1]/div[2]/div[1]/span[@class="_1gV6Q0h"]/text()').extract_first()
+
+                offer_off = plan_offer.xpath('.//a/div[1]/div[2]/div[2]/span/span[@class="sAkFuj_"]/text()').extract_first()
+                if offer_off is not None:
+                    offer_off = offer_off.replace('\n', '').replace(' ', '')
+                
+                offer = { 
+                    'title' : str(offer_title), 
+                    'current_price' : str(offer_current_price), 
+                    'previous_price' : str(offer_prev_price), 
+                    'off_in_%' : str(offer_off)
+                }
+
                 scrap_output['offers'].append(offer)
 
             yield scrap_output
