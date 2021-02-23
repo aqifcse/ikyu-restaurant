@@ -37,7 +37,6 @@ class IkyuRestaurantSpider(scrapy.Spider):
     def parse(self, response):
 
         plans = response.xpath('//div[@id="plans"]/section/div[3]/ul//li[@class="_1QMibK-"]')
-        # print(plans)
 
         for plan in plans:
 
@@ -47,7 +46,7 @@ class IkyuRestaurantSpider(scrapy.Spider):
             regular_fee             = plan.xpath('.//div/div/div/span[2]/text()').extract_first()
 
             offer_list = []
-            scrap_output = { 'meal_type' : meal_type + ' ', 'title' :  title + ' ', 'course_type' : course_type + ' ', 'regular_fee' : regular_fee + ' ', 'offers' : [] }
+            scrap_output = { 'meal_type' : str(meal_type) + ' ', 'title' :  str(title) + ' ', 'course_type' : str(course_type) + ' ', 'regular_fee' : str(regular_fee) + ' ', 'offers' : offer_list }
 
             plan_offers = plan.xpath('./div/ul/li[@class="_3S76qhi"]')
 
@@ -58,5 +57,5 @@ class IkyuRestaurantSpider(scrapy.Spider):
                 offer_off             = plan_offer.xpath('.//a/div[1]/div[2]/div[2]/span/span[1]/text()').extract_first()
                 offer = "title : " + str(offer_title) + ' ' + "current_price : " + ' ' +  str(offer_current_price) + ' ' + "previous_price : " + str(offer_prev_price) + ' ' + "off : " + str(offer_off) + ' '
                 scrap_output['offers'].append(offer)
-        
+
             yield scrap_output
