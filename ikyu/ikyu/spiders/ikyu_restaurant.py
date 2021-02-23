@@ -51,10 +51,13 @@ class IkyuRestaurantSpider(scrapy.Spider):
             plan_offers = plan.xpath('./div/ul/li[@class="_3S76qhi"]')
 
             for plan_offer in plan_offers:
-                offer_title           = plan_offer.xpath('.//a/div[1]/div[1]/h4/text()').extract_first()
-                offer_current_price   = plan_offer.xpath('.//a/div[1]/div[2]/div[2]/span/span[2]/text()').extract_first()
-                offer_prev_price      = plan_offer.xpath('.//a/div[1]/div[2]/div[1]/span/text()').extract_first()
-                offer_off             = plan_offer.xpath('.//a/div[1]/div[2]/div[2]/span/span[1]/text()').extract_first()
+                offer_title               = plan_offer.xpath('.//a/div[1]/div[1]/h4/text()').extract_first()
+                try:
+                    offer_current_price   = plan_offer.xpath('.//a/div[1]/div[2]/div[@class="_2U8wNG5"]/span[@class="_1CPmbeh"]/span[@class="_2Xel14i"]/text()').extract_first()
+                except:
+                    offer_current_price   = plan_offer.xpath('.//a/div[1]/div[2]/div[@class="_2U8wNG5"]/span[@class="_1CPmbeh"]/span[@class="_2Xel14i"]/text()').extract_first()
+                offer_prev_price          = plan_offer.xpath('.//a/div[1]/div[2]/div[1]/span[@class="_1gV6Q0h"]/text()').extract_first()
+                offer_off                 = plan_offer.xpath('.//a/div[1]/div[2]/div[2]/span/span[@class="sAkFuj_"]/text()').extract_first()
                 offer = "title : " + str(offer_title) + ' ' + "current_price : " + ' ' +  str(offer_current_price) + ' ' + "previous_price : " + str(offer_prev_price) + ' ' + "off : " + str(offer_off) + ' '
                 scrap_output['offers'].append(offer)
 
